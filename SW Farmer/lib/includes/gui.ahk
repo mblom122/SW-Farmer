@@ -2,7 +2,7 @@
 ; 					Include
 ; ###############################################
 
-#Include lib\Class_ImageButton.ahk
+#Include lib\includes\Class_ImageButton.ahk
 
 ;###############################################
 ;	Main window
@@ -24,8 +24,14 @@ Gui, Add, Text, % "x0 y0 w" 260 " h20 BackgroundTrans Center 0x200 gGuiMove vgui
 Gui, Font, s12
 Gui, Add, GroupBox,x8 y30 w284 h145, Control
 Gui, Font, s10
-gui, add, Text,x20 y50 w80 h20 left vtxtPaused, Paused:  
-gui, add, Text,x115 y50 w80 h20 left vtxtRefill, Refill: 
+gui, add, Text,x20 y50 w47 h20 left vtxtPaused, Paused:
+Gui, font,bold cF72C25
+gui, add, Text,x71 y50 w45 h18 left vtxtPausedData,  
+Gui, font,norm cFFFFFF
+gui, add, Text,x115 y50 w45 h20 left vtxtRefill, Refill:
+Gui, font,bold cF72C25
+gui, add, Text,x151 y50 w45 h18 left vtxtRefillData,
+Gui, font,norm cFFFFFF
 Gui, Font, underline
 Gui, Add, Button,x20 y69 w72 h30 vbutPause gTogglePause hwndHBT2,  {F4} Pause
 	Opt1 := [1, 0x17BEBB, 0x17BEBB, "Black"]             ; normal background & text colors
@@ -49,7 +55,7 @@ Gui, Font, norm
 gui, add, Text,x15 y115 w120 h20 right vtxtSelectedMap, Select farming map:
 Gui, Add, DropDownList,x145 y114 w140 h20 Choose1 R10 vddlSelectedMap gSelectMap, %listMaps%
 gui, add, Text,x15 y146 w120 h20 right vtxtSelectedDiff, Select difficulty:
-Gui, Add, DropDownList,x145 y144 w140 h20 R5 vddlSelectedDiff gSelectDiff, |B1|B2|B3|B4|B5|B6|B7|B8|B9|B10||
+Gui, Add, DropDownList,x145 y144 w140 h20 R5 vddlSelectedDiff, |B1|B2|B3|B4|B5|B6|B7|B8|B9|B10||
 
 
 ;###############################################

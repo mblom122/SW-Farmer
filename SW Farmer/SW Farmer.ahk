@@ -15,38 +15,37 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; 					Include
 ; ###############################################
 
-#Include lib\variables.ahk
-#Include lib\functions.ahk
-#Include lib\gui.ahk
+#Include lib\includes\variables.ahk
+#Include lib\includes\functions.ahk
+ReadFodderCSV()
+#Include lib\includes\gui.ahk
 
 
 ; ###############################################
-				; Initialize MouseCoords
+; 			Initialize Startup
 ; ###############################################
-; Opt("MouseCoordMode", 2) ;1=absolute, 0=relative, 2=client
-; Opt("SendKeyDownDelay", 80)
 
-; ###############################################
-				; Hot keys
-; ###############################################
-; HotKeySet('{F5}', 'Quit')
-; HotKeySet('{F4}', 'TogglePause')
-; HotKeySet('{F3}', 'ToggleRefill')
-; HotKeySet('{F1}', "checkForImage")
+if not A_IsAdmin
+{
+	msgbox Please start in admin mode
+	ExitApp
+}
+
+CoordMode, Mouse, Relative
+ReadFodderCSV()
+
 
 ; ###############################################
 				; Main loop
 ; ###############################################
 
-runtime = A_TickCount
-
 Loop
 {
-	
-	UpdateUi()
+
 	CalcTimes()
-	
-	sleep, 100
+	UpdateUi()
+
+	sleep, %loopTime%
 }
 
 	; If $Paused = False Then
@@ -76,14 +75,39 @@ Loop
 ; WEnd
 
 ; ###############################################
+; 					Hot keys
+; ###############################################
+
+F3::
+	refill := not refill
+	If (refill = False)
+		GuiControl,+cF72C25, txtRefillData
+	Else
+		GuiControl,+c20BF55, txtRefillData
+return
+
+F4::
+	paused := not paused
+	If (paused = False)
+		GuiControl,+cF72C25, txtPausedData
+	Else
+	{
+		GuiControl,+c20BF55, txtPausedData
+		status := "Paused"
+	}
+return
+
+F5::
+	ExitApp
+return
+
+
+; ###############################################
 				; Gui Functions
 ; ###############################################
 
-Quit:
-	ExitApp
-
 SelectMap:
-Gui, Submit, nohide
+	Gui, Submit, nohide
 	If (ddlSelectedMap = "Chiruka" or ddlSelectedMap = "Faimon" or ddlSelectedMap = "Vrofagus" or ddlSelectedMap = "Hydeni" or ddlSelectedMap = "Tamor")
 		GuiControl,, ddlSelectedDiff, |Normal||Hard|Hell
 	Else If (ddlSelectedMap = "Dragons" or ddlSelectedMap = "Giants" or ddlSelectedMap = "Necro")
@@ -98,14 +122,32 @@ Gui, Submit, nohide
 		GuiControl,, ddlSelectedDiff, |none||
 return
 
-SelectDiff:
-Gui, Submit, nohide
+; SelectDiff:
+	; Gui, Submit, nohide
+; return
 
-return
 GuiMove:
    PostMessage, 0xA1, 2
 return
+
 ToggleRefill:
+	refill := not refill
+	If (refill = False)
+		GuiControl,+cF72C25, txtRefillData
+	Else
+		GuiControl,+c20BF55, txtRefillData
 return
+
 TogglePause:
+	paused := not paused
+	If (paused = False)
+		GuiControl,+cF72C25, txtPausedData
+	Else
+	{
+		GuiControl,+c20BF55, txtPausedData
+		status := "Paused"
+	}
 return
+
+Quit:
+	ExitApp
